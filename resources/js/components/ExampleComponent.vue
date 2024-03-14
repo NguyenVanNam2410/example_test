@@ -11,14 +11,21 @@
     <div class="w-[800px] mx-auto mt-4">
         <Step1
             v-if="stepActive === 1"
-            :form="ruleForm"
+            :form="formStep1"
             :dataMeal="dataMeal"
             @continue="handleContinue"
         />
         <Step2
-            :form="ruleForm"
+            :form="formStep2"
             :dataRestaurants="dataRestaurants"
             v-if="stepActive === 2"
+            @back="handleBackStepForm"
+            @continue="handleContinue"
+        />
+        <Step3
+            :form="formStep2"
+            :dataRestaurants="dataRestaurants"
+            v-if="stepActive === 3"
             @back="handleBackStepForm"
             @continue="handleContinue"
         />
@@ -30,6 +37,7 @@
     import {onMounted, ref} from "vue";
     import Step1 from "./Step1.vue";
     import Step2 from "./Step2.vue";
+    import Step3 from "./Step3.vue";
     const stepActive = ref(1)
     const data = ref([])
     const dataMeal = ref([
@@ -37,10 +45,18 @@
         { id: 2, name: 'lunch' },
         { id: 3, name: 'dinner'},
     ])
+    const constMeal = {
+        1: 'breakfast',
+        2: 'lunch',
+        3: 'dinner',
+    }
     const dataRestaurants = ref()
-    const ruleForm = ref({
+    const formStep1 = ref({
         count_people: null,
         meal: null,
+    })
+    const formStep2 = ref({
+        restaurant: null,
     })
     const errors = ref({})
 
@@ -62,29 +78,37 @@
     const handleBackStepForm = ({ step, form }) => {
         switch (step) {
             case 1:
-                ruleForm.value = form
+                formStep1.value = form
                 stepActive.value--
                 break
             case 2:
-                formLevel.value = form
+                // formLevel.value = form
                 stepActive.value--
                 break
             case 3:
-                formSocial.value = form
+                // formSocial.value = form
                 stepActive.value--
                 break
         }
     }
 
     const handleContinue = async ({ form, step }) => {
-        console.log(step)
         switch (step) {
             case 1:
-                ruleForm.value = form
+                formStep1.value = form
+                const dataDishes = data.value.filter(dish => dish.availableMeals.includes(constMeal[formStep1.value.meal]))
+                const uniqueRestaurantIds = [];
+                dataRestaurants.value = dataDishes.filter(dish => {
+                if (!uniqueRestaurantIds.some(item => item.restaurant === dish.restaurant)) {
+                    uniqueRestaurantIds.push({ id: dish.id, name: dish.restaurant });
+                    return true;
+                }
+                return false;
+            });
                 stepActive.value++
                 break
             case 2:
-                // formSocial.value = form
+                formStep2.value = form
                 stepActive.value++
                 break
             case 3:

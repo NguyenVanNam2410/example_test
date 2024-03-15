@@ -9,7 +9,7 @@
         label-position="top"
         size="default"
     >
-        <el-form-item label="Please select a Restaurant" prop="meal">
+        <el-form-item label="Please select a Restaurant" prop="restaurant">
             <el-select v-model="formSubmit.restaurant" placeholder="-----------">
                 <el-option
                     v-for="(option, index) in dataRestaurants" :key="option.id"
@@ -44,7 +44,7 @@ const formRules = computed(() => {
     return {
         restaurant: {
             required: true,
-            message: 'Vui lòng chọn nhà hàng',
+            message: 'Please select a Restaurant',
             trigger: 'change',
         },
     }

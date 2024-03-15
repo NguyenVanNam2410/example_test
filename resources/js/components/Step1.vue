@@ -55,12 +55,12 @@ const formRules = computed(() => {
         count_people: {
             required: true,
             validator: validateNumber,
-            message: 'vui lòng nhập số người',
+            message: 'Please enter number of people',
             trigger: 'blur',
         },
         meal: {
             required: true,
-            message: 'Vui lòng chọn meal',
+            message: 'Please select a meal',
             trigger: 'change',
         },
     }

@@ -24,6 +24,7 @@
         />
         <Step3
             :form="formStep3"
+            :formStep1="formStep1"
             :dataFoodStep3="dataFoodStep3"
             v-if="stepActive === 3"
             @back="handleBackStepForm"
@@ -54,8 +55,9 @@
     const formStep2 = ref({
         restaurant: null,
     })
-    const formStep3 = ref()
-    const errors = ref({})
+    const formStep3 = ref([
+        { name: '', number_dish: null, }
+    ])
 
     const fetchData = async () => {
         try {
@@ -108,7 +110,12 @@
                 formStep2.value = form
                 dataFoodStep3.value = data.value.filter(dish => {
                     return dish.availableMeals.includes(dataMeal.value[formStep1.value.meal]) && dish.restaurant === dataRestaurants.value[formStep2.value.restaurant];
-                }).map(dish => dish.name);
+                }).map(dish => {
+                    return {
+                        name: dish.name,
+                        disabled: false
+                    };
+                });
                 stepActive.value++
                 break
             case 3:

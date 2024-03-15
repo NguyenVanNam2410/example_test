@@ -13,7 +13,7 @@
             <el-select v-model="formSubmit.restaurant" placeholder="-----------">
                 <el-option
                     v-for="(option, index) in dataRestaurants" :key="option.id"
-                    :value="index"
+                    :value="option"
                     :label="option"
                 />
             </el-select>

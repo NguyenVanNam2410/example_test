@@ -34,6 +34,7 @@
             :formStep1="formStep1"
             :formStep2="formStep2"
             :formStep3="formStep3"
+            :dataMeal="dataMeal"
             v-if="stepActive === 4"
             @back="handleBackStepForm"
             @continue="handleContinue"
@@ -44,6 +45,7 @@
 <script setup>
     import axios from 'axios';
     import {onMounted, ref} from "vue";
+    import { ElMessage } from 'element-plus'
     import Step1 from "./Step1.vue";
     import Step2 from "./Step2.vue";
     import Step3 from "./Step3.vue";
@@ -98,6 +100,9 @@
                 formStep3.value = form
                 stepActive.value--
                 break
+            case 4:
+                stepActive.value--
+                break
         }
     }
 
@@ -119,7 +124,7 @@
             case 2:
                 formStep2.value = form
                 dataFoodStep3.value = data.value.filter(dish => {
-                    return dish.availableMeals.includes(dataMeal.value[formStep1.value.meal]) && dish.restaurant === dataRestaurants.value[formStep2.value.restaurant];
+                    return dish.availableMeals.includes(dataMeal.value[formStep1.value.meal]) && dish.restaurant === formStep2.value.restaurant
                 }).map(dish => {
                     return {
                         name: dish.name,
@@ -133,7 +138,28 @@
                 stepActive.value++
                 break
             case 4:
+                await handleDish()
+                await fetchData()
+                break
+        }
+    }
+
+    const handleDish = async () => {
+        const data = {
+            'meal': formStep1.value.meal,
+            'count_people': formStep1.value.count_people,
+            'restaurant': formStep2.value.restaurant,
+            'dishs': formStep3.value
+        }
+        try {
+            const response = await axios.post('/api/dish', data);
+            if (response.data.status_code === 200) {
+                ElMessage({
+                    message: response.data.message,
+                    type: 'success',
+                })
                 stepActive.value = 1
+
                 formStep1.value ={
                     count_people: null,
                     meal: null,
@@ -144,10 +170,15 @@
                 formStep3.value = [
                     { name: '', number_dish: null, }
                 ]
-                await fetchData()
-                break
+            } else {
+                ElMessage.error('Error')
+            }
+
+        } catch (error) {
+            ElMessage.error(error)
         }
     }
+
     onMounted(async () => {
         await fetchData()
     })

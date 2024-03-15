@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/data', [ExampleController::class, 'masterData'])->name('masterData');
+Route::post('/dish', [ExampleController::class, 'dish'])->name('dish');

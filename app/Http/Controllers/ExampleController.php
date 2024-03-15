@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DishRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -25,6 +26,17 @@ class ExampleController extends Controller
         $jsonData = $this->readJsonFile();
 
         return $this->sendSuccessResponse($jsonData);
+    }
+
+    /**
+     * Logic dish
+     *
+     * @param DishRequest $request
+     * @return JsonResponse
+     */
+    public function dish(DishRequest $request)
+    {
+        return $this->sendSuccessResponse([], 'Bạn đặt chọn nhà hàng đặt món ăn thành công.');
     }
 
 

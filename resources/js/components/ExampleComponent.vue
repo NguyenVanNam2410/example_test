@@ -4,7 +4,7 @@
             <el-step title="Step 1" />
             <el-step title="Step 2" />
             <el-step title="Step 3" />
-            <el-step title="Step 4" />
+            <el-step title="Review" />
         </el-steps>
     </div>
 
@@ -30,6 +30,14 @@
             @back="handleBackStepForm"
             @continue="handleContinue"
         />
+        <Step4
+            :formStep1="formStep1"
+            :formStep2="formStep2"
+            :formStep3="formStep3"
+            v-if="stepActive === 4"
+            @back="handleBackStepForm"
+            @continue="handleContinue"
+        />
     </div>
 </template>
 
@@ -39,6 +47,8 @@
     import Step1 from "./Step1.vue";
     import Step2 from "./Step2.vue";
     import Step3 from "./Step3.vue";
+    import Step4 from "./Step4.vue";
+
     const stepActive = ref(1)
     const data = ref([])
     const dataMeal = ref({
@@ -81,11 +91,11 @@
                 stepActive.value--
                 break
             case 2:
-                // formLevel.value = form
+                formStep2.value = form
                 stepActive.value--
                 break
             case 3:
-                // formSocial.value = form
+                formStep3.value = form
                 stepActive.value--
                 break
         }
@@ -119,12 +129,22 @@
                 stepActive.value++
                 break
             case 3:
-                // formLevel.value = form
+                formStep3.value = form
                 stepActive.value++
                 break
             case 4:
-                // step.value = form
-                // await handleAsyncStorePersonnel()
+                stepActive.value = 1
+                formStep1.value ={
+                    count_people: null,
+                    meal: null,
+                }
+                formStep2.value = {
+                    restaurant: null,
+                }
+                formStep3.value = [
+                    { name: '', number_dish: null, }
+                ]
+                await fetchData()
                 break
         }
     }

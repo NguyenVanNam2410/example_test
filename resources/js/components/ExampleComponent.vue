@@ -23,8 +23,8 @@
             @continue="handleContinue"
         />
         <Step3
-            :form="formStep2"
-            :dataRestaurants="dataRestaurants"
+            :form="formStep3"
+            :dataFoodStep3="dataFoodStep3"
             v-if="stepActive === 3"
             @back="handleBackStepForm"
             @continue="handleContinue"
@@ -40,17 +40,13 @@
     import Step3 from "./Step3.vue";
     const stepActive = ref(1)
     const data = ref([])
-    const dataMeal = ref([
-        { id: 1, name: 'breakfast'},
-        { id: 2, name: 'lunch' },
-        { id: 3, name: 'dinner'},
-    ])
-    const constMeal = {
+    const dataMeal = ref({
         1: 'breakfast',
         2: 'lunch',
         3: 'dinner',
-    }
+    })
     const dataRestaurants = ref()
+    const dataFoodStep3 = ref()
     const formStep1 = ref({
         count_people: null,
         meal: null,
@@ -58,6 +54,7 @@
     const formStep2 = ref({
         restaurant: null,
     })
+    const formStep3 = ref()
     const errors = ref({})
 
     const fetchData = async () => {
@@ -96,19 +93,22 @@
         switch (step) {
             case 1:
                 formStep1.value = form
-                const dataDishes = data.value.filter(dish => dish.availableMeals.includes(constMeal[formStep1.value.meal]))
-                const uniqueRestaurantIds = [];
-                dataRestaurants.value = dataDishes.filter(dish => {
-                if (!uniqueRestaurantIds.some(item => item.restaurant === dish.restaurant)) {
-                    uniqueRestaurantIds.push({ id: dish.id, name: dish.restaurant });
-                    return true;
-                }
-                return false;
-            });
+                const breakfastRestaurants = [];
+                data.value.forEach(dish => {
+                    if (dish.availableMeals.includes(dataMeal.value[formStep1.value.meal])) {
+                        if (!breakfastRestaurants.includes(dish.restaurant)) {
+                            breakfastRestaurants.push(dish.restaurant);
+                        }
+                    }
+                });
+                dataRestaurants.value = breakfastRestaurants
                 stepActive.value++
                 break
             case 2:
                 formStep2.value = form
+                dataFoodStep3.value = data.value.filter(dish => {
+                    return dish.availableMeals.includes(dataMeal.value[formStep1.value.meal]) && dish.restaurant === dataRestaurants.value[formStep2.value.restaurant];
+                }).map(dish => dish.name);
                 stepActive.value++
                 break
             case 3:

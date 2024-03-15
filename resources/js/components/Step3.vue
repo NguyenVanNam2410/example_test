@@ -12,9 +12,9 @@
         <el-form-item label="Meal" prop="meal">
             <el-select v-model="formSubmit.restaurant" placeholder="-----------">
                 <el-option
-                    v-for="option in dataRestaurants" :key="option.id"
-                    :value="option.id"
-                    :label="option.name"
+                    v-for="(option, index) in dataFoodStep3" :key="index"
+                    :value="index"
+                    :label="option"
                 />
             </el-select>
         </el-form-item>
@@ -32,7 +32,7 @@ const props = defineProps({
         type: Object,
         required: true
     },
-    dataRestaurants: {
+    dataFoodStep3: {
         type: Object,
         required: true
     }
@@ -51,13 +51,13 @@ const formRules = computed(() => {
 })
 
 const handleBack = () => {
-    emits('back', { step: 2, form: formSubmit.value })
+    emits('back', { step: 3, form: formSubmit.value })
 }
 
 const handleContinue = () => {
     refFormInformation.value.validate((valid) => {
         if(valid) {
-            emits('continue', { form: formSubmit.value, step : 2 })
+            emits('continue', { form: formSubmit.value, step : 3 })
         }
     })
 }

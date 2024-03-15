@@ -9,16 +9,16 @@
         label-position="top"
         size="default"
     >
-        <el-form-item label="Meal" prop="meal">
+        <el-form-item label="Please select a meal" prop="meal">
             <el-select v-model="formSubmit.meal" placeholder="-----------">
                 <el-option
-                    v-for="option in dataMeal" :key="option.id"
-                    :value="option.id"
-                    :label="option.name"
+                    v-for="(option, index) in dataMeal" :key="option.id"
+                    :value="index"
+                    :label="option"
                 />
             </el-select>
         </el-form-item>
-        <el-form-item label="count people" prop="count_people">
+        <el-form-item label="Please enter number of people" prop="count_people">
             <el-input-number
                 v-model.number="formSubmit.count_people"
                 type="text"

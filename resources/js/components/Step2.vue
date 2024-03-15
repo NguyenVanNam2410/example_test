@@ -9,12 +9,12 @@
         label-position="top"
         size="default"
     >
-        <el-form-item label="Meal" prop="meal">
+        <el-form-item label="Please select a Restaurant" prop="meal">
             <el-select v-model="formSubmit.restaurant" placeholder="-----------">
                 <el-option
-                    v-for="option in dataRestaurants" :key="option.id"
-                    :value="option.id"
-                    :label="option.name"
+                    v-for="(option, index) in dataRestaurants" :key="option.id"
+                    :value="index"
+                    :label="option"
                 />
             </el-select>
         </el-form-item>
